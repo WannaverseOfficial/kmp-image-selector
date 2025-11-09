@@ -1,7 +1,5 @@
 package com.wannaverse.imageselector
 
-import androidx.compose.ui.graphics.ImageBitmap
-
 /**
  * A container class representing a loaded image.
  *
@@ -18,9 +16,9 @@ import androidx.compose.ui.graphics.ImageBitmap
  * ```
  *
  * On iOS, this will always be `null` because iOS does not have the same concept of a URI as Android/JVM.
- * @property imageBitmap which can be used to draw the image
+ * @property bytes raw bytes read from the image
  */
 data class ImageData(
-    /** An ImageBitmap used for drawing */
-    val imageBitmap: ImageBitmap?
+    /** The raw bytes read from the file */
+    val bytes: ByteArray?
 )

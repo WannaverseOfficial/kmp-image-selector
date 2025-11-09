@@ -24,7 +24,7 @@ fun ComponentActivity.registerImageSelectorLauncher() {
                 try {
                     val bytes = activity.contentResolver.openInputStream(it)?.use { s -> s.readBytes() }
                     ImageData(
-                        imageBitmap = bytes?.toImageBitmap()
+                        bytes = bytes
                     )
                 } catch (e: IOException) {
                     e.printStackTrace()

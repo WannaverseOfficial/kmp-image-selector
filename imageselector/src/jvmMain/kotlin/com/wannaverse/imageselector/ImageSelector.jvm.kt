@@ -19,7 +19,7 @@ actual class ImageSelector {
                     val file = chooser.selectedFile
                     val bytes = file.readBytes()
                     ImageData(
-                        imageBitmap = bytes.toImageBitmap()
+                        bytes = bytes
                     )
                 } else {
                     null

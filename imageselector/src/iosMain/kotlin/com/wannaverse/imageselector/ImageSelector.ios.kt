@@ -37,7 +37,7 @@ actual class ImageSelector {
                 picker.dismissViewControllerAnimated(true) {
                     continuation.resume(
                         ImageData(
-                            imageBitmap = bytes?.toImageBitmap()
+                            bytes = bytes
                         )
                     )
                 }
