@@ -36,18 +36,16 @@ fun ComponentActivity.registerImageSelectorLauncher() {
         }
 }
 
-actual class ImageSelector actual constructor() {
-    actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { continuation ->
-        val launcher = imageSelectorLauncher
-        if (launcher == null) {
-            continuation.resume(null)
-            return@suspendCancellableCoroutine
-        }
-
-        pendingContinuation = { imageData ->
-            continuation.resume(imageData)
-        }
-
-        launcher.launch("image/*")
+actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { continuation ->
+    val launcher = imageSelectorLauncher
+    if (launcher == null) {
+        continuation.resume(null)
+        return@suspendCancellableCoroutine
     }
+
+    pendingContinuation = { imageData ->
+        continuation.resume(imageData)
+    }
+
+    launcher.launch("image/*")
 }
