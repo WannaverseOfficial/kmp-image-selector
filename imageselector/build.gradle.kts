@@ -32,7 +32,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
-            implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(compose.ui)
         }
         jvmMain.dependencies {
