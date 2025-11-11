@@ -4,6 +4,7 @@ $dokka.location:com.wannaverse.imageselector////PointingToDeclaration/imagesele
 $dokka.location:com.wannaverse.imageselector//registerImageSelectorLauncher/androidx.activity.ComponentActivity#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/register-image-selector-launcher.html
 $dokka.location:com.wannaverse.imageselector//selectImage/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/select-image.html
 $dokka.location:com.wannaverse.imageselector//setImageSelectorActivity/#androidx.activity.ComponentActivity/PointingToDeclaration/imageselector/com.wannaverse.imageselector/set-image-selector-activity.html
+$dokka.location:com.wannaverse.imageselector//toByteArray/androidx.compose.ui.graphics.ImageBitmap#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/to-byte-array.html
 $dokka.location:com.wannaverse.imageselector//toImageBitmap/kotlin.ByteArray#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/to-image-bitmap.html
 $dokka.location:com.wannaverse.imageselector//withAspectRatio/androidx.compose.ui.graphics.ImageBitmap#kotlin.Float#kotlin.Boolean#kotlin.Int?/PointingToDeclaration/imageselector/com.wannaverse.imageselector/with-aspect-ratio.html
 $dokka.location:com.wannaverse.imageselector/ImageData///PointingToDeclaration/imageselector/com.wannaverse.imageselector/-image-data/index.html
