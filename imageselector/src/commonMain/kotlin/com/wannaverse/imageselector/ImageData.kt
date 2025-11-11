@@ -6,7 +6,7 @@ package com.wannaverse.imageselector
  * Example usage:
  *
  * ```kotlin
- * val bitmap = image.value?.imageBitmap
+ * val bitmap = image.value?.bytes?.toImageBitMap()
  * bitmap?.let {
  *     Image(
  *         bitmap = it,
@@ -15,7 +15,6 @@ package com.wannaverse.imageselector
  * }
  * ```
  *
- * On iOS, this will always be `null` because iOS does not have the same concept of a URI as Android/JVM.
  * @property bytes raw bytes read from the image
  */
 data class ImageData(
