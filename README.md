@@ -10,7 +10,6 @@ A Kotlin Multiplatform image selection library for Android, iOS and Desktop.
 ## Features
 * Selecting images on Android, iOS and Desktop
 * Setting aspect ratios
-* Image rotation
 
 ## ✅ Supported Platform
 
@@ -24,9 +23,21 @@ A Kotlin Multiplatform image selection library for Android, iOS and Desktop.
 ## 🚀 Installation
 See the releases section of this repository for the latest version.
 
+To your `build.gradle` under `commonMain.dependencies` add:
+
 ```kotlin
 implementation "com.wannaverse:imageselector:<version>"
 ```
+
+Important this library uses native code. You will need the additional dependencies depending on the targets you are building for:
+
+**Android** under `androidMain.dependencies`: `implementation("com.wannaverse:imageselector-android:")`
+
+**iOS (ARM)** under `iosMain.dependencies`: `implementation("com.wannaverse:imageselector-iosarm64:")`
+
+**iOS x64** under `iosMain.dependencies`: `implementation("com.wannaverse:imageselector-iosx64:")`
+
+**jvm**: `implementation("com.wannaverse:imageselector-jvm:")`
 
 ## Usage
 
@@ -51,8 +62,8 @@ Example `ViewModel`:
 class AppViewModel : ViewModel() {
     val image = mutableStateOf<ImageData?>(null)
 
-    fun selectImage() = viewModelScope.launch {
-        image.value = ImageSelector().selectImage()
+    fun chooseImage() = viewModelScope.launch {
+        image.value = selectImage()
     }
 }
 ```
@@ -69,7 +80,7 @@ fun App(viewModel: AppViewModel = viewModel { AppViewModel() }) {
         .safeContentPadding()
     ) {
         Button(onClick = {
-            viewModel.selectImage()
+            viewModel.chooseImage()
         }) {
             Text(
                 text = "Select Image"
