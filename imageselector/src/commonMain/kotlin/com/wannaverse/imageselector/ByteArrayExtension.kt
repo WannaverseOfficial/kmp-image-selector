@@ -8,3 +8,10 @@ import androidx.compose.ui.graphics.ImageBitmap
  * This is an `expect` function; its actual implementation is platform-specific.
  */
 expect fun ByteArray.toImageBitmap(): ImageBitmap
+
+/**
+ * Converts this [ImageBitmap] into a [ByteArray]
+ *
+ * This is an `expect` function; its actual implementation is platform-specific.
+ */
+expect fun ImageBitmap.toByteArray(): ByteArray
