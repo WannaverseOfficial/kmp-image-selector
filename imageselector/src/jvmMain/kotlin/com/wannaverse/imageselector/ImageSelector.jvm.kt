@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
-actual suspend fun selectImage(): ImageData? {
+actual suspend fun launchImagePicker(): ByteArray? {
     return withContext(Dispatchers.IO) {
         try {
             val chooser = JFileChooser().apply {
@@ -14,15 +14,7 @@ actual suspend fun selectImage(): ImageData? {
             }
 
             val result = chooser.showOpenDialog(null)
-            if (result == JFileChooser.APPROVE_OPTION) {
-                val file = chooser.selectedFile
-                val bytes = file.readBytes()
-                ImageData(
-                    bytes = bytes
-                )
-            } else {
-                null
-            }
+            if (result == JFileChooser.APPROVE_OPTION) chooser.selectedFile.readBytes() else null
         } catch (e: Exception) {
             e.printStackTrace()
             null

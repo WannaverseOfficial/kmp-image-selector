@@ -5,19 +5,19 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.refTo
 import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.Foundation.NSData
-import platform.UIKit.UIImagePickerController
-import platform.UIKit.UIImagePickerControllerSourceType
-import platform.UIKit.UIImagePickerControllerDelegateProtocol
-import platform.UIKit.UINavigationControllerDelegateProtocol
-import platform.UIKit.UIImagePickerControllerOriginalImage
-import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIApplication
 import platform.UIKit.UIImage
+import platform.UIKit.UIImageJPEGRepresentation
+import platform.UIKit.UIImagePickerController
+import platform.UIKit.UIImagePickerControllerDelegateProtocol
+import platform.UIKit.UIImagePickerControllerOriginalImage
+import platform.UIKit.UIImagePickerControllerSourceType
+import platform.UIKit.UINavigationControllerDelegateProtocol
 import platform.darwin.NSObject
 import platform.posix.memcpy
 import kotlin.coroutines.resume
 
-actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { continuation ->
+actual suspend fun launchImagePicker(): ByteArray? = suspendCancellableCoroutine { continuation ->
     val picker = UIImagePickerController().apply {
         sourceType =
             UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
@@ -34,11 +34,7 @@ actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { con
             val bytes = data?.toByteArray()
 
             picker.dismissViewControllerAnimated(true) {
-                continuation.resume(
-                    ImageData(
-                        bytes = bytes
-                    )
-                )
+                continuation.resume(bytes)
             }
         }
 
