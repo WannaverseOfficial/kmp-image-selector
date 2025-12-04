@@ -62,9 +62,48 @@ Example `ViewModel`:
 ```kotlin
 class AppViewModel : ViewModel() {
     val image = mutableStateOf<ImageData?>(null)
-
+    val showLoadingState by mutableStateOf(false)
     fun chooseImage() = viewModelScope.launch {
-        image.value = selectImage()
+        image.value = selectImage( loadingState = { showLoadingState = it } )
+    }
+}
+```
+
+>**Note:** `selectImage()` return a downscaled image for the current window to prevent `OutOfMemoryError`. That's why it may take several seconds to return the image bytes. So, a `loadingState` callback is provided to show a `CircularProgressIndicator` to make the UI look responsive instead of frozen during image processing.
+
+Example Composable:
+```kotlin
+@Composable
+fun App(viewModel: AppViewModel = viewModel { AppViewModel() }) {
+    val image = remember { viewModel.image }
+    val bitmap = image.value?.bytes?.toImageBitmap()
+
+    if(viewModel.showLoadingState) {
+        Dialog(
+            onDismissRequest = { /* Non-Dismissible */ } 
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .safeContentPadding()
+    ) {
+        Button(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            onClick = { viewModel.chooseImage() }
+        ) {
+            Text(
+                text = "Select Image"
+            )
+        }
+        bitmap?.let {
+            Image(
+                bitmap = it,
+                contentDescription = null
+            )
+        }
     }
 }
 ```
@@ -89,33 +128,6 @@ val underFiveMb = image.value?.compressToMaxBytes(
 
 > **Note:** `maxBytes` is only enforced for JPEG images. PNG is a lossless format with no quality parameter, so the `maxBytes` constraint is ignored when compressing to PNG, the image will be returned at full size.
 
-Example Composable:
-```kotlin
-@Composable
-fun App(viewModel: AppViewModel = viewModel { AppViewModel() }) {
-    val image = remember { viewModel.image }
-    val bitmap = image.value?.bytes?.toImageBitmap()
-    
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .safeContentPadding()
-    ) {
-        Button(onClick = {
-            viewModel.chooseImage()
-        }) {
-            Text(
-                text = "Select Image"
-            )
-        }
-        bitmap?.let {
-            Image(
-                bitmap = it,
-                contentDescription = null
-            )
-        }
-    }
-}
-```
 
 ## License
 MIT LICENSE. See [LICENSE](./LICENSE) for details.

@@ -1,5 +1,4 @@
 package com.wannaverse.imageselector
-
 /**
  * A container class representing a loaded image.
  *

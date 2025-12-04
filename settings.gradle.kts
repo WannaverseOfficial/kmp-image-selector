@@ -34,3 +34,5 @@ plugins {
 }
 
 include(":imageselector")
+include(":androidApp")
+include(":demo")
