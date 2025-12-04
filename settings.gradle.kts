@@ -34,3 +34,4 @@ plugins {
 }
 
 include(":imageselector")
+include(":demo")

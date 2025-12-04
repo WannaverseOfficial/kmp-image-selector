@@ -35,7 +35,7 @@ kotlin {
             implementation(compose.ui)
         }
         jvmMain.dependencies {
-            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.kotlinx.coroutines.swing)
         }
         iosMain.dependencies {
             implementation(libs.skiko)
