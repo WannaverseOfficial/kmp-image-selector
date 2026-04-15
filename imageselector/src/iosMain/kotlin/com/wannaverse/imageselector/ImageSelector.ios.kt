@@ -17,6 +17,9 @@ import platform.darwin.NSObject
 import platform.posix.memcpy
 import kotlin.coroutines.resume
 
+private var activePickerDelegate: NSObject? = null
+private var activePicker: UIImagePickerController? = null
+
 actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { continuation ->
     val picker = UIImagePickerController().apply {
         sourceType =
@@ -34,29 +37,42 @@ actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { con
             val bytes = data?.toByteArray()
 
             picker.dismissViewControllerAnimated(true) {
-                continuation.resume(
-                    ImageData(
-                        bytes = bytes
-                    )
-                )
+                clearActivePickerReferences()
+                continuation.resume(bytes?.let { ImageData(bytes = it) })
             }
         }
 
         override fun imagePickerControllerDidCancel(picker: UIImagePickerController) {
             picker.dismissViewControllerAnimated(true) {
+                clearActivePickerReferences()
                 continuation.resume(null)
             }
         }
     }
 
     picker.delegate = delegate
+    activePicker = picker
+    activePickerDelegate = delegate
 
     val rootController = UIApplication.sharedApplication.keyWindow?.rootViewController
-    rootController?.presentViewController(picker, true, null)
+    if (rootController == null) {
+        clearActivePickerReferences()
+        continuation.resume(null)
+        return@suspendCancellableCoroutine
+    }
+
+    rootController.presentViewController(picker, true, null)
 
     continuation.invokeOnCancellation {
         picker.dismissViewControllerAnimated(true, null)
+        clearActivePickerReferences()
     }
+}
+
+private fun clearActivePickerReferences() {
+    activePicker?.delegate = null
+    activePicker = null
+    activePickerDelegate = null
 }
 
 private fun UIImage.toJpegData(quality: Double = 1.0): NSData? {
