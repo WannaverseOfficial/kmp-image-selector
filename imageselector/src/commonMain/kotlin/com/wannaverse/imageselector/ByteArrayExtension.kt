@@ -15,3 +15,12 @@ expect fun ByteArray.toImageBitmap(): ImageBitmap
  * This is an `expect` function; its actual implementation is platform-specific.
  */
 expect fun ImageBitmap.toByteArray(): ByteArray
+
+/**
+ * Compresses this [ByteArray] if it contains a supported image.
+ *
+ * If compression cannot be applied, the original bytes are returned unchanged.
+ */
+expect fun ByteArray.compressImage(
+    options: ImageCompressionOptions = ImageCompressionOptions()
+): ByteArray

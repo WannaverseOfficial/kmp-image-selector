@@ -10,8 +10,9 @@ A Kotlin Multiplatform image selection library for Android, iOS and Desktop.
 ## Features
 * Selecting images on Android, iOS and Desktop
 * Setting aspect ratios
+* Compressing images by quality or toward a target file size
 
-## ✅ Supported Platform
+## Supported Platform
 
 | Platform | Supported |
 |:---------|:----------|
@@ -20,7 +21,7 @@ A Kotlin Multiplatform image selection library for Android, iOS and Desktop.
 | Desktop  | ✔️        |
 | Web      | ❌️        |
 
-## 🚀 Installation
+## Installation
 See the releases section of this repository for the latest version.
 
 To your `build.gradle` under `commonMain.dependencies` add:
@@ -68,6 +69,26 @@ class AppViewModel : ViewModel() {
 }
 ```
 
+You can then compress the selected image when needed:
+
+```kotlin
+val compressed = image.value?.compress(
+    ImageCompressionOptions(
+        quality = 88
+    )
+)
+```
+
+Or target a maximum size, for example 5 MB:
+
+```kotlin
+val underFiveMb = image.value?.compressToMaxBytes(
+    maxBytes = 5L * 1024L * 1024L
+)
+```
+
+> **Note:** `maxBytes` is only enforced for JPEG images. PNG is a lossless format with no quality parameter, so the `maxBytes` constraint is ignored when compressing to PNG, the image will be returned at full size.
+
 Example Composable:
 ```kotlin
 @Composable
@@ -96,9 +117,9 @@ fun App(viewModel: AppViewModel = viewModel { AppViewModel() }) {
 }
 ```
 
-## 📄 License
+## License
 MIT LICENSE. See [LICENSE](./LICENSE) for details.
 
-## 🙌 Contributing
+## Contributing
 Pull requests and feature requests are welcome!
 If you encounter any issues, feel free to open an issue.
