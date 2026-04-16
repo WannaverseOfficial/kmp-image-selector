@@ -87,6 +87,8 @@ val underFiveMb = image.value?.compressToMaxBytes(
 )
 ```
 
+> **Note:** `maxBytes` is only enforced for JPEG images. PNG is a lossless format with no quality parameter, so the `maxBytes` constraint is ignored when compressing to PNG, the image will be returned at full size.
+
 Example Composable:
 ```kotlin
 @Composable
