@@ -10,6 +10,8 @@ import org.jetbrains.skia.Data
 import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
 import platform.Foundation.NSData
+import platform.Foundation.NSMutableData
+import platform.Foundation.appendBytes
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIImagePNGRepresentation
@@ -54,8 +56,11 @@ private fun UIImage.encode(format: ImageCompressionFormat, quality: Int): NSData
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun ByteArray.toNSData(): NSData = usePinned {
-    NSData.dataWithBytes(bytes = it.addressOf(0), length = size.toULong())
+private fun ByteArray.toNSData(): NSData {
+    val data = NSMutableData()
+    if (isEmpty()) return data
+    usePinned { data.appendBytes(it.addressOf(0), size.toULong()) }
+    return data
 }
 
 @OptIn(ExperimentalForeignApi::class)
