@@ -46,7 +46,7 @@
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
         <div class="library-version" id="library-version">
-1.1.0        </div>
+1.2.0        </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
                 <button class="platform-tag platform-selector common-like" data-active=""
@@ -111,7 +111,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":imageselector:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">ImageData</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>bytes<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><p class="paragraph">A container class representing a loaded image.</p><p class="paragraph">Example usage:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val bitmap = image.value?.bytes?.toImageBitMap()<br>bitmap?.let {<br>    Image(<br>        bitmap = it,<br>        contentDescription = null<br>    )<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -151,12 +151,46 @@
           </div>
         </div>
       </div>
+      <div data-togglable="EXTENSION_FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-2117295850%2FFunctions%2F-2104579942" anchor-label="compress" id="-2117295850%2FFunctions%2F-2104579942" data-filterable-set=":imageselector:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":imageselector:dokkaHtml/commonMain" data-filterable-set=":imageselector:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../compress.html"><span><span>compress</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2117295850%2FFunctions%2F-2104579942"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":imageselector:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html">ImageData</a><span class="token punctuation">.</span><a href="../compress.html"><span class="token function">compress</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">options<span class="token operator">: </span><a href="../-image-compression-options/index.html">ImageCompressionOptions</a><span class="token operator"> = </span>ImageCompressionOptions()</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ImageData</a></div><div class="brief "><p class="paragraph">Returns a compressed copy of this <a href="index.html">ImageData</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1359015382%2FFunctions%2F-2104579942" anchor-label="compressToMaxBytes" id="-1359015382%2FFunctions%2F-2104579942" data-filterable-set=":imageselector:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":imageselector:dokkaHtml/commonMain" data-filterable-set=":imageselector:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../compress-to-max-bytes.html"><span>compress</span><wbr></wbr><span>To</span><wbr></wbr><span>Max</span><wbr></wbr><span><span>Bytes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1359015382%2FFunctions%2F-2104579942"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":imageselector:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html">ImageData</a><span class="token punctuation">.</span><a href="../compress-to-max-bytes.html"><span class="token function">compressToMaxBytes</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">maxBytes<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">format<span class="token operator">: </span><a href="../-image-compression-format/index.html">ImageCompressionFormat</a><span class="token operator"> = </span>ImageCompressionFormat.JPEG<span class="token punctuation">, </span></span><span class="parameter ">quality<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">90</span><span class="token punctuation">, </span></span><span class="parameter ">minQuality<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">55</span><span class="token punctuation">, </span></span><span class="parameter ">qualityStep<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">5</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ImageData</a></div><div class="brief "><p class="paragraph">Compresses this <a href="index.html">ImageData</a> toward the provided maximum size.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
+        <span>© 2026 Copyright</span>
         <span class="pull-right">
             <span>Generated by </span>
             <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
