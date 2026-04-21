@@ -5,18 +5,106 @@ import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.refTo
 import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
+import platform.CoreFoundation.CFDataCreate
+import platform.CoreFoundation.CFDataGetBytes
+import platform.CoreFoundation.CFDataGetLength
+import platform.CoreFoundation.CFDataRef
+import platform.CoreFoundation.CFDictionaryAddValue
+import platform.CoreFoundation.CFDictionaryCreateMutable
+import platform.CoreFoundation.CFRangeMake
+import platform.CoreFoundation.CFRelease
+import platform.Foundation.CFBridgingRetain
 import platform.Foundation.NSData
 import platform.Foundation.NSMutableData
+import platform.Foundation.NSNumber
 import platform.Foundation.appendBytes
+import platform.Foundation.numberWithBool
+import platform.Foundation.numberWithInt
+import platform.ImageIO.CGImageSourceCreateThumbnailAtIndex
+import platform.ImageIO.CGImageSourceCreateWithData
+import platform.ImageIO.kCGImageSourceCreateThumbnailFromImageAlways
+import platform.ImageIO.kCGImageSourceCreateThumbnailWithTransform
+import platform.ImageIO.kCGImageSourceThumbnailMaxPixelSize
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIImagePNGRepresentation
 import platform.posix.memcpy
 
+@OptIn(ExperimentalForeignApi::class)
+actual suspend fun ByteArray.downSamplingToImageBitmap(
+    coroutineScope: CoroutineScope,
+    reqHeight: Int,
+    reqWidth: Int
+): ImageBitmap? {
+    val byteArray = this
+    var imageBitmap: ImageBitmap? = null
+    coroutineScope.launch(Dispatchers.Default) {
+        runCatching {
+
+            // Toll-free bridging: NSData to CFDataRef
+            val cfData = byteArray.toCFData()
+            val imageSource = CGImageSourceCreateWithData(cfData, null) ?: return@launch
+            val maxDimension = maxOf(reqWidth, reqHeight)
+            // Create a native CFDictionary without Kotlin Map bridging
+            val options = CFDictionaryCreateMutable(null, 3, null, null)
+
+            // Add values directly using CFDictionaryAddValue
+            // We use CFBridgingRetain on the NSNumbers to get their raw pointers
+            CFDictionaryAddValue(options, kCGImageSourceCreateThumbnailFromImageAlways, CFBridgingRetain(NSNumber.numberWithBool(true)))
+            CFDictionaryAddValue(options, kCGImageSourceCreateThumbnailWithTransform, CFBridgingRetain(NSNumber.numberWithBool(true)))
+            CFDictionaryAddValue(options, kCGImageSourceThumbnailMaxPixelSize, CFBridgingRetain(NSNumber.numberWithInt(maxDimension)))
+
+            // Create the downsampled CGImage
+            val cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0u, options) ?: return@launch
+
+
+            // Convert CGImage -> Skia Image -> Compose ImageBitmap
+
+            val uiIMage = UIImage.imageWithCGImage(cgImage)
+
+            // Cleanup Core Foundation objects to prevent leaks
+            CFRelease(options)
+            CFRelease(imageSource)
+            CFRelease(cfData)
+            CFRelease(cgImage)
+
+            val nsData = UIImagePNGRepresentation(uiIMage)?: return@launch
+            val bytes = nsData.toByteArray()
+            val skiaImage = Image.makeFromEncoded(bytes)
+            skiaImage.toComposeImageBitmap()
+        }
+            .onSuccess {
+                imageBitmap = it
+            }
+            .onFailure {
+                println("Down Sampling byteArray failed: ${it.printStackTrace()}")
+            }
+    }.join()
+    return imageBitmap
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun ByteArray.toCFData(): CFDataRef =
+    CFDataCreate(null,
+        toUByteArray().refTo(0),
+        size.toLong())!!
+
+@OptIn(ExperimentalForeignApi::class)
+private fun CFDataRef.toByteArray(): ByteArray {
+    val length = CFDataGetLength(this)
+    return UByteArray(length.toInt()).apply {
+        val range = CFRangeMake(0, length)
+        CFDataGetBytes(this@toByteArray, range, refTo(0))
+    }.toByteArray()
+}
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
     return Image
         .makeFromEncoded(Data.makeFromBytes(this).bytes)
