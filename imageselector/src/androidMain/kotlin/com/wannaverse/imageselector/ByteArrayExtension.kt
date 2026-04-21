@@ -20,10 +20,8 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(
     coroutineScope.launch(Dispatchers.Default) {
         BitmapFactory.Options().runCatching {
             inJustDecodeBounds = true
-
             BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, this)
             inSampleSize = calculateInSampleSize(this, reqHeight, reqWidth)
-
             inJustDecodeBounds = false
             BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, this)
                 .asImageBitmap()
@@ -32,7 +30,7 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(
             imageBitmap = it
         }
         .onFailure {
-            println("Down Sampling byteArray failed: ${it.stackTrace}")
+            throw RuntimeException(it.message)
         }
     }.join()
     return imageBitmap

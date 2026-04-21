@@ -97,19 +97,13 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(coroutineScope: Coroutine
     var imageBitmap: ImageBitmap? = null
     coroutineScope.launch(Dispatchers.Default) {
         runCatching {
-            // 1. Convert byte array to BufferedImage
             val bais = ByteArrayInputStream(byteArray)
             val originalImage = withContext(Dispatchers.IO) {
                 ImageIO.read(bais)
             }
-
-            // 2. Calculate new dimensions while maintaining aspect ratio
             val type = BufferedImage.TYPE_INT_RGB
             val resizedImage = BufferedImage(reqWidth, reqHeight, type)
-
-            // 3. Scale Image
             val g2d = resizedImage.createGraphics()
-            // Use bilinear or bicubic interpolation for better quality
             g2d.setRenderingHint(
                 RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR
@@ -122,7 +116,7 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(coroutineScope: Coroutine
             imageBitmap = it.toComposeImageBitmap()
         }
         .onFailure {
-            println("Down Sampling byteArray failed: ${it.stackTrace}")
+            throw RuntimeException(it.message)
         }
     }.join()
     return imageBitmap

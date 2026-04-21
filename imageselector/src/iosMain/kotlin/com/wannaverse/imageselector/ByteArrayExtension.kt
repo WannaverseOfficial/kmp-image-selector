@@ -49,28 +49,16 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(
     coroutineScope.launch(Dispatchers.Default) {
         runCatching {
 
-            // Toll-free bridging: NSData to CFDataRef
             val cfData = byteArray.toCFData()
             val imageSource = CGImageSourceCreateWithData(cfData, null) ?: return@launch
             val maxDimension = maxOf(reqWidth, reqHeight)
-            // Create a native CFDictionary without Kotlin Map bridging
             val options = CFDictionaryCreateMutable(null, 3, null, null)
-
-            // Add values directly using CFDictionaryAddValue
-            // We use CFBridgingRetain on the NSNumbers to get their raw pointers
             CFDictionaryAddValue(options, kCGImageSourceCreateThumbnailFromImageAlways, CFBridgingRetain(NSNumber.numberWithBool(true)))
             CFDictionaryAddValue(options, kCGImageSourceCreateThumbnailWithTransform, CFBridgingRetain(NSNumber.numberWithBool(true)))
             CFDictionaryAddValue(options, kCGImageSourceThumbnailMaxPixelSize, CFBridgingRetain(NSNumber.numberWithInt(maxDimension)))
-
-            // Create the downsampled CGImage
             val cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0u, options) ?: return@launch
-
-
-            // Convert CGImage -> Skia Image -> Compose ImageBitmap
-
             val uiIMage = UIImage.imageWithCGImage(cgImage)
 
-            // Cleanup Core Foundation objects to prevent leaks
             CFRelease(options)
             CFRelease(imageSource)
             CFRelease(cfData)
@@ -85,7 +73,7 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(
                 imageBitmap = it
             }
             .onFailure {
-                println("Down Sampling byteArray failed: ${it.printStackTrace()}")
+                throw RuntimeException(it.message)
             }
     }.join()
     return imageBitmap

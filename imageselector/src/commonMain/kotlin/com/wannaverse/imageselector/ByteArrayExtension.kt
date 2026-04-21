@@ -36,5 +36,6 @@ expect fun ByteArray.compressImage(
  *
  * @param reqHeight = height of the screen on which the image will be displayed.
  * @param reqWidth = width of the screen on which the image will be displayed.
+ * @throws RuntimeException it throws any exception caught while down sampling the image.
  */
 expect suspend fun ByteArray.downSamplingToImageBitmap(coroutineScope: CoroutineScope, reqHeight: Int, reqWidth: Int): ImageBitmap?
