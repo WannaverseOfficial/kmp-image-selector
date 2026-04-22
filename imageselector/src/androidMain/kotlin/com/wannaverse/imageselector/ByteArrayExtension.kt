@@ -5,8 +5,50 @@ import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
+actual suspend fun ByteArray.downSamplingToImageBitmap(
+    coroutineScope: CoroutineScope,
+    reqHeight: Int,
+    reqWidth: Int
+): ImageBitmap? {
+    var imageBitmap: ImageBitmap? = null
+    val byteArray = this
+    coroutineScope.launch(Dispatchers.Default) {
+        BitmapFactory.Options().runCatching {
+            inJustDecodeBounds = true
+            BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, this)
+            inSampleSize = calculateInSampleSize(this, reqHeight, reqWidth)
+            inJustDecodeBounds = false
+            BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, this)
+                .asImageBitmap()
+        }
+        .onSuccess {
+            imageBitmap = it
+        }
+        .onFailure {
+            throw RuntimeException(it.message)
+        }
+    }.join()
+    return imageBitmap
+}
+
+private fun calculateInSampleSize(options: BitmapFactory.Options, reqHeight: Int, reqWidth: Int): Int {
+    val (height: Int, width: Int) = options.run { outHeight to outWidth }
+    var inSampleSize = 1
+    if(height > reqHeight || width > reqWidth) {
+        val halfHeight: Int = height / 2
+        val halfWidth: Int = width / 2
+
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
+}
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
     return BitmapFactory.decodeByteArray(this, 0, size).asImageBitmap()
 }

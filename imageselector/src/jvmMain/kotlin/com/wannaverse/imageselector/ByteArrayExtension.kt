@@ -3,6 +3,10 @@ package com.wannaverse.imageselector
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.awt.Color
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
@@ -12,6 +16,7 @@ import javax.imageio.ImageIO
 import javax.imageio.ImageWriteParam
 import javax.imageio.ImageWriter
 import javax.imageio.stream.MemoryCacheImageOutputStream
+
 
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
     val inputStream = ByteArrayInputStream(this)
@@ -86,3 +91,33 @@ private fun ImageWriter.jpegWriteParam(quality: Int): ImageWriteParam =
         compressionMode = ImageWriteParam.MODE_EXPLICIT
         compressionQuality = quality.coerceIn(0, 100) / 100f
     }
+
+actual suspend fun ByteArray.downSamplingToImageBitmap(coroutineScope: CoroutineScope, reqHeight: Int, reqWidth: Int): ImageBitmap? {
+    val byteArray = this
+    var imageBitmap: ImageBitmap? = null
+    coroutineScope.launch(Dispatchers.Default) {
+        runCatching {
+            val bais = ByteArrayInputStream(byteArray)
+            val originalImage = withContext(Dispatchers.IO) {
+                ImageIO.read(bais)
+            }
+            val type = BufferedImage.TYPE_INT_RGB
+            val resizedImage = BufferedImage(reqWidth, reqHeight, type)
+            val g2d = resizedImage.createGraphics()
+            g2d.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR
+            )
+            g2d.drawImage(originalImage, 0, 0, reqWidth, reqHeight, null)
+            g2d.dispose()
+            resizedImage
+        }
+        .onSuccess {
+            imageBitmap = it.toComposeImageBitmap()
+        }
+        .onFailure {
+            throw RuntimeException(it.message)
+        }
+    }.join()
+    return imageBitmap
+}
