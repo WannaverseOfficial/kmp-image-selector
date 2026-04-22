@@ -7,7 +7,7 @@ androidx-activity = "1.11.0"
 composeMultiplatform = "1.9.1"
 kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
-skiko = "0.9.30"
+skiko = "0.9.37.3"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
