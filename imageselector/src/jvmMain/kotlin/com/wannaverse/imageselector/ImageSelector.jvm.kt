@@ -1,11 +1,16 @@
 package com.wannaverse.imageselector
 
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
-actual suspend fun selectImage(): ImageData? {
+actual suspend fun selectImage(
+    reqResolution: IntSize,
+    loadingState: (Boolean) -> Unit
+): ImageData? {
     return withContext(Dispatchers.IO) {
         try {
             val chooser = JFileChooser().apply {

@@ -1,5 +1,7 @@
 package com.wannaverse.imageselector
 
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.unit.IntSize
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.refTo
@@ -20,7 +22,10 @@ import kotlin.coroutines.resume
 private var activePickerDelegate: NSObject? = null
 private var activePicker: UIImagePickerController? = null
 
-actual suspend fun selectImage(): ImageData? = suspendCancellableCoroutine { continuation ->
+actual suspend fun selectImage(
+    reqResolution: IntSize,
+    loadingState: (Boolean) -> Unit
+): ImageData? = suspendCancellableCoroutine { continuation ->
     val picker = UIImagePickerController().apply {
         sourceType =
             UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
