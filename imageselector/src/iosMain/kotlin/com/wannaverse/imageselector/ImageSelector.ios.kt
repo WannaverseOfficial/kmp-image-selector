@@ -1,55 +1,105 @@
 package com.wannaverse.imageselector
 
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.IntSize
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.refTo
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.autoreleasepool
+import kotlinx.cinterop.useContents
+import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import platform.Foundation.NSData
-import platform.UIKit.UIImagePickerController
-import platform.UIKit.UIImagePickerControllerSourceType
-import platform.UIKit.UIImagePickerControllerDelegateProtocol
-import platform.UIKit.UINavigationControllerDelegateProtocol
-import platform.UIKit.UIImagePickerControllerOriginalImage
-import platform.UIKit.UIImageJPEGRepresentation
+import kotlinx.coroutines.withContext
 import platform.UIKit.UIApplication
 import platform.UIKit.UIImage
+import platform.UIKit.UIImagePickerController
+import platform.UIKit.UIImagePickerControllerDelegateProtocol
+import platform.UIKit.UIImagePickerControllerOriginalImage
+import platform.UIKit.UIImagePickerControllerSourceType
+import platform.UIKit.UINavigationControllerDelegateProtocol
 import platform.darwin.NSObject
-import platform.posix.memcpy
 import kotlin.coroutines.resume
 
 private var activePickerDelegate: NSObject? = null
 private var activePicker: UIImagePickerController? = null
 
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 actual suspend fun selectImage(
     reqResolution: IntSize,
     loadingState: (Boolean) -> Unit
 ): ImageData? = suspendCancellableCoroutine { continuation ->
     val picker = UIImagePickerController().apply {
-        sourceType =
-            UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
+        sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
         allowsEditing = false
     }
 
-    val delegate = object : NSObject(), UIImagePickerControllerDelegateProtocol, UINavigationControllerDelegateProtocol {
+    val delegate = object : NSObject(), UIImagePickerControllerDelegateProtocol,
+        UINavigationControllerDelegateProtocol {
         override fun imagePickerController(
             picker: UIImagePickerController,
             didFinishPickingMediaWithInfo: Map<Any?, *>
         ) {
-            val image = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
-            val data = image?.toJpegData(quality = 1.0)
-            val bytes = data?.toByteArray()
+            loadingState(true)
 
-            picker.dismissViewControllerAnimated(true) {
-                clearActivePickerReferences()
-                continuation.resume(bytes?.let { ImageData(bytes = it) })
+            val originalImage = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
+
+            if (originalImage == null) {
+                picker.dismissViewControllerAnimated(true) {
+                    clearActivePickerReferences()
+                    loadingState(false)
+                    continuation.resume(null)
+                }
+                return
+            }
+
+            CoroutineScope(Dispatchers.Default).launch {
+                var resultBytes: ByteArray? = null
+
+                autoreleasepool {
+                    val (srcWidth, srcHeight) = originalImage.size.useContents { width to height }
+
+                    val scaleFactor = minOf(reqResolution.width.toDouble() / srcWidth, reqResolution.height.toDouble() / srcHeight)
+                    val finalScale = if (scaleFactor < 1.0) scaleFactor else 1.0
+                    val targetWidth = srcWidth * finalScale
+                    val targetHeight = srcHeight * finalScale
+
+                    val targetSize = platform.CoreGraphics.CGSizeMake(targetWidth, targetHeight)
+
+                    platform.UIKit.UIGraphicsBeginImageContextWithOptions(targetSize, false, 1.0)
+                    originalImage.drawInRect(platform.CoreGraphics.CGRectMake(0.0, 0.0, targetWidth, targetHeight))
+                    val downsampledImage = platform.UIKit.UIGraphicsGetImageFromCurrentImageContext()
+                    platform.UIKit.UIGraphicsEndImageContext()
+
+                    if (downsampledImage != null) {
+                        val nsData = platform.UIKit.UIImageJPEGRepresentation(downsampledImage, 0.85)
+                        if (nsData != null) {
+                            val byteArray = ByteArray(nsData.length.toInt())
+                            if (byteArray.isNotEmpty()) {
+                                byteArray.usePinned { pinned ->
+                                    platform.posix.memcpy(pinned.addressOf(0), nsData.bytes, nsData.length)
+                                }
+                            }
+                            resultBytes = byteArray
+                        }
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    picker.dismissViewControllerAnimated(true) {
+                        clearActivePickerReferences()
+                        loadingState(false)
+
+                        continuation.resume(resultBytes?.let { ImageData(bytes = it) })
+                    }
+                }
             }
         }
-
         override fun imagePickerControllerDidCancel(picker: UIImagePickerController) {
             picker.dismissViewControllerAnimated(true) {
                 clearActivePickerReferences()
+                loadingState(false)
                 continuation.resume(null)
             }
         }
@@ -78,18 +128,4 @@ private fun clearActivePickerReferences() {
     activePicker?.delegate = null
     activePicker = null
     activePickerDelegate = null
-}
-
-private fun UIImage.toJpegData(quality: Double = 1.0): NSData? {
-    return UIImageJPEGRepresentation(this, quality)
-}
-
-@OptIn(ExperimentalForeignApi::class)
-private fun NSData.toByteArray(): ByteArray {
-    val bytes = ByteArray(this.length.toInt())
-    memScoped {
-        val rawPtr = bytes.refTo(0).getPointer(this)
-        memcpy(rawPtr, this@toByteArray.bytes, this@toByteArray.length)
-    }
-    return bytes
 }
