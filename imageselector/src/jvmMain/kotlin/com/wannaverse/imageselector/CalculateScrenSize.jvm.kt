@@ -4,7 +4,7 @@ import java.awt.Window
 
 actual fun getCurrentWindowSize(): WindowSize {
     val activeWindow = Window.getWindows().firstOrNull { it.isFocused }
-        ?: Window.getWindows().firstOrNull() // Fallback to first available window
+        ?: Window.getWindows().firstOrNull()
 
     return if (activeWindow != null) {
         WindowSize(
@@ -12,7 +12,6 @@ actual fun getCurrentWindowSize(): WindowSize {
             height = activeWindow.height
         )
     } else {
-        // Complete fallback to full screen if no window is rendered yet
         val screenSize = java.awt.Toolkit.getDefaultToolkit().screenSize
         WindowSize(width = screenSize.width, height = screenSize.height)
     }

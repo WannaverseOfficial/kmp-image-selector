@@ -13,10 +13,9 @@ actual fun getCurrentWindowSize(): WindowSize {
         .filterIsInstance<UIWindowScene>()
         .firstOrNull()
 
-    // 2. Extract the key window bounds from that active scene
     val windowBounds = activeScene?.windows?.filterIsInstance<UIWindow>()
         ?.firstOrNull { it.isKeyWindow() }?.bounds
-        ?: UIScreen.mainScreen.bounds // Fallback to main screen if window isn't loaded yet
+        ?: UIScreen.mainScreen.bounds
 
     val scale = UIScreen.mainScreen.scale
 

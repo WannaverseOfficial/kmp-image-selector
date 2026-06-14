@@ -24,8 +24,9 @@ fun setImageSelectorActivity(activity: ComponentActivity) {
     currentActivity = activity
 }
 
-fun getAppContext(): Context? {
-    return currentActivity?.applicationContext
+fun getAppContext(): Context {
+    if(currentActivity == null) throw RuntimeException("add `setImageSelectorActivity(this)` in `MainActivity.kt` of your android module!")
+    return currentActivity!!.applicationContext
 }
 fun ComponentActivity.registerImageSelectorLauncher() {
     imageSelectorLauncher =
