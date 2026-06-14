@@ -1,7 +1,5 @@
 package com.wannaverse.imageselector
 
-import androidx.compose.ui.unit.IntSize
-
 /**
  * Opens the platform's image picker and returns the selected [ImageData], or `null`
  * if the user cancels the selection.
@@ -11,4 +9,4 @@ import androidx.compose.ui.unit.IntSize
  * @param reqResolution the screen size in which the image is needed to be shown.
  * @param loadingState a callback to pass true if image is processing and false if it has finished processing the image.
  */
-expect suspend fun selectImage(reqResolution: IntSize, loadingState: (Boolean) -> Unit): ImageData?
+expect suspend fun selectImage(reqResolution: WindowSize = getCurrentWindowSize(), loadingState: (Boolean) -> Unit = {}): ImageData?

@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,12 +17,16 @@ import kotlin.coroutines.resume
 private var imageSelectorLauncher: ActivityResultLauncher<String>? = null
 private var pendingContinuation: ((ImageData?) -> Unit)? = null
 private var currentActivity: ComponentActivity? = null
-lateinit  var imageLoadingState: ((Boolean) -> Unit)
-private var reqImageResolution: IntSize? = null
+private lateinit  var imageLoadingState: ((Boolean) -> Unit)
+private var reqImageResolution: WindowSize? = null
+
 fun setImageSelectorActivity(activity: ComponentActivity) {
     currentActivity = activity
 }
 
+fun getAppContext(): Context? {
+    return currentActivity?.applicationContext
+}
 fun ComponentActivity.registerImageSelectorLauncher() {
     imageSelectorLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -36,7 +39,7 @@ fun ComponentActivity.registerImageSelectorLauncher() {
         }
 }
 
-actual suspend fun selectImage(reqResolution: IntSize, loadingState: (Boolean) -> Unit): ImageData? = suspendCancellableCoroutine { continuation ->
+actual suspend fun selectImage(reqResolution: WindowSize, loadingState: (Boolean) -> Unit): ImageData? = suspendCancellableCoroutine { continuation ->
 
     reqImageResolution = reqResolution
     val launcher = imageSelectorLauncher
@@ -56,7 +59,7 @@ actual suspend fun selectImage(reqResolution: IntSize, loadingState: (Boolean) -
 }
 
 @OptIn(DelicateCoroutinesApi::class)
-fun decodeSampledBitmapFromUri(context: Context, uri: Uri, reqResolution: IntSize) = GlobalScope.launch(
+fun decodeSampledBitmapFromUri(context: Context, uri: Uri, reqResolution: WindowSize) = GlobalScope.launch(
     Dispatchers.Default) {
     imageLoadingState.invoke(true)
     var resultData: ImageData? = null

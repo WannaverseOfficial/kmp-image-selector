@@ -36,7 +36,7 @@ actual suspend fun ByteArray.downSamplingToImageBitmap(
     return imageBitmap
 }
 
-private fun calculateInSampleSize(options: BitmapFactory.Options, reqHeight: Int, reqWidth: Int): Int {
+fun calculateInSampleSize(options: BitmapFactory.Options, reqHeight: Int, reqWidth: Int): Int {
     val (height: Int, width: Int) = options.run { outHeight to outWidth }
     var inSampleSize = 1
     if(height > reqHeight || width > reqWidth) {

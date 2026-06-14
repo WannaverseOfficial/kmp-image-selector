@@ -1,6 +1,5 @@
 package com.wannaverse.imageselector
 
-import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -11,7 +10,7 @@ import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
 actual suspend fun selectImage(
-    reqResolution: IntSize,
+    reqResolution: WindowSize,
     loadingState: (Boolean) -> Unit
 ): ImageData? {
 
