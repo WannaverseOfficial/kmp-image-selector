@@ -9,6 +9,6 @@ import androidx.compose.ui.unit.IntSize
  * current screen size and then loaded into memory as [ImageData] which is lower than the
  * actual size eliminating the possibility of `OutOfMemoryError`
  * @param reqResolution the screen size in which the image is needed to be shown.
- * @param loadingState a callback to pass true if image is processing and false if it's not processing.
+ * @param loadingState a callback to pass true if image is processing and false if it has finished processing the image.
  */
 expect suspend fun selectImage(reqResolution: IntSize, loadingState: (Boolean) -> Unit): ImageData?
