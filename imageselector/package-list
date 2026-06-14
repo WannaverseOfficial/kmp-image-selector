@@ -1,13 +1,18 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.wannaverse.imageselector////PointingToDeclaration/imageselector/com.wannaverse.imageselector/index.html
+$dokka.location:com.wannaverse.imageselector//calculateInSampleSize/#android.graphics.BitmapFactory.Options#kotlin.Int#kotlin.Int/PointingToDeclaration/imageselector/com.wannaverse.imageselector/calculate-in-sample-size.html
+$dokka.location:com.wannaverse.imageselector//calculateInSampleSize/#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/imageselector/com.wannaverse.imageselector/calculate-in-sample-size.html
 $dokka.location:com.wannaverse.imageselector//compress/com.wannaverse.imageselector.ImageData#com.wannaverse.imageselector.ImageCompressionOptions/PointingToDeclaration/imageselector/com.wannaverse.imageselector/compress.html
 $dokka.location:com.wannaverse.imageselector//compressImage/kotlin.ByteArray#com.wannaverse.imageselector.ImageCompressionOptions/PointingToDeclaration/imageselector/com.wannaverse.imageselector/compress-image.html
 $dokka.location:com.wannaverse.imageselector//compressToMaxBytes/com.wannaverse.imageselector.ImageData#kotlin.Long#com.wannaverse.imageselector.ImageCompressionFormat#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/imageselector/com.wannaverse.imageselector/compress-to-max-bytes.html
 $dokka.location:com.wannaverse.imageselector//compressToMaxBytes/kotlin.ByteArray#kotlin.Long#com.wannaverse.imageselector.ImageCompressionFormat#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/imageselector/com.wannaverse.imageselector/compress-to-max-bytes.html
+$dokka.location:com.wannaverse.imageselector//decodeSampledBitmapFromUri/#android.content.Context#android.net.Uri#com.wannaverse.imageselector.WindowSize/PointingToDeclaration/imageselector/com.wannaverse.imageselector/decode-sampled-bitmap-from-uri.html
 $dokka.location:com.wannaverse.imageselector//downSamplingToImageBitmap/kotlin.ByteArray#kotlinx.coroutines.CoroutineScope#kotlin.Int#kotlin.Int/PointingToDeclaration/imageselector/com.wannaverse.imageselector/down-sampling-to-image-bitmap.html
+$dokka.location:com.wannaverse.imageselector//getAppContext/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/get-app-context.html
+$dokka.location:com.wannaverse.imageselector//getCurrentWindowSize/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/get-current-window-size.html
 $dokka.location:com.wannaverse.imageselector//registerImageSelectorLauncher/androidx.activity.ComponentActivity#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/register-image-selector-launcher.html
-$dokka.location:com.wannaverse.imageselector//selectImage/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/select-image.html
+$dokka.location:com.wannaverse.imageselector//selectImage/#kotlin.Function1[kotlin.Boolean,kotlin.Unit]/PointingToDeclaration/imageselector/com.wannaverse.imageselector/select-image.html
 $dokka.location:com.wannaverse.imageselector//setImageSelectorActivity/#androidx.activity.ComponentActivity/PointingToDeclaration/imageselector/com.wannaverse.imageselector/set-image-selector-activity.html
 $dokka.location:com.wannaverse.imageselector//toByteArray/androidx.compose.ui.graphics.ImageBitmap#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/to-byte-array.html
 $dokka.location:com.wannaverse.imageselector//toImageBitmap/kotlin.ByteArray#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/to-image-bitmap.html
@@ -28,4 +33,8 @@ $dokka.location:com.wannaverse.imageselector/ImageCompressionOptions/qualityStep
 $dokka.location:com.wannaverse.imageselector/ImageData///PointingToDeclaration/imageselector/com.wannaverse.imageselector/-image-data/index.html
 $dokka.location:com.wannaverse.imageselector/ImageData/ImageData/#kotlin.ByteArray?/PointingToDeclaration/imageselector/com.wannaverse.imageselector/-image-data/-image-data.html
 $dokka.location:com.wannaverse.imageselector/ImageData/bytes/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/-image-data/bytes.html
+$dokka.location:com.wannaverse.imageselector/WindowSize///PointingToDeclaration/imageselector/com.wannaverse.imageselector/-window-size/index.html
+$dokka.location:com.wannaverse.imageselector/WindowSize/WindowSize/#kotlin.Int#kotlin.Int/PointingToDeclaration/imageselector/com.wannaverse.imageselector/-window-size/-window-size.html
+$dokka.location:com.wannaverse.imageselector/WindowSize/height/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/-window-size/height.html
+$dokka.location:com.wannaverse.imageselector/WindowSize/width/#/PointingToDeclaration/imageselector/com.wannaverse.imageselector/-window-size/width.html
 com.wannaverse.imageselector
