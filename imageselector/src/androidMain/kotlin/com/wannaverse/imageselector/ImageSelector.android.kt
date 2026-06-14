@@ -40,9 +40,9 @@ fun ComponentActivity.registerImageSelectorLauncher() {
         }
 }
 
-actual suspend fun selectImage(reqResolution: WindowSize, loadingState: (Boolean) -> Unit): ImageData? = suspendCancellableCoroutine { continuation ->
+actual suspend fun selectImage(loadingState: (Boolean) -> Unit): ImageData? = suspendCancellableCoroutine { continuation ->
 
-    reqImageResolution = reqResolution
+    reqImageResolution = getCurrentWindowSize()
     val launcher = imageSelectorLauncher
     if (launcher == null) {
         continuation.resume(null)

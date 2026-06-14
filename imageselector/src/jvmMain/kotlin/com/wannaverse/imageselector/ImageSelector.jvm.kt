@@ -10,10 +10,9 @@ import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
 actual suspend fun selectImage(
-    reqResolution: WindowSize,
     loadingState: (Boolean) -> Unit
 ): ImageData? {
-
+    val reqResolution = getCurrentWindowSize()
     val file = withContext(Dispatchers.Main) {
         val chooser = JFileChooser().apply {
             dialogTitle = "Select an Image"

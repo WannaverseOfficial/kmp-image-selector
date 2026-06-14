@@ -26,14 +26,13 @@ private var activePicker: UIImagePickerController? = null
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 actual suspend fun selectImage(
-    reqResolution: WindowSize,
     loadingState: (Boolean) -> Unit
 ): ImageData? = suspendCancellableCoroutine { continuation ->
     val picker = UIImagePickerController().apply {
         sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
         allowsEditing = false
     }
-
+    val reqResolution = getCurrentWindowSize()
     val delegate = object : NSObject(), UIImagePickerControllerDelegateProtocol,
         UINavigationControllerDelegateProtocol {
         override fun imagePickerController(
