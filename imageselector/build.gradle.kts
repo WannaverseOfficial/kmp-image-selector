@@ -1,28 +1,31 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.publishing)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.multiplatform.library)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.publishing)
 }
 
 group = "com.wannaverse"
-version = "1.4.0"
+version = "1.4.1"
 
 kotlin {
-    androidTarget {
+    jvmToolchain(21)
+    android {
+        namespace = "com.wannaverse.imageselector"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
         }
-        publishLibraryVariants("release")
-        publishLibraryVariantsGroupedByFlavor = true
+        androidResources {
+            enable = true
+        }
     }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
     jvm()
@@ -32,36 +35,15 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
-            implementation(compose.ui)
+            implementation(libs.compose.ui)
         }
         jvmMain.dependencies {
-            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.kotlinx.coroutines.swing)
         }
         iosMain.dependencies {
             implementation(libs.skiko)
         }
     }
-}
-
-android {
-    namespace = "com.wannaverse.imageselector"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
 }
 
 compose.desktop {
@@ -74,9 +56,11 @@ compose.desktop {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
-    signAllPublications()
+    if (!project.hasProperty("skipSigning")) {
+        signAllPublications()
+    }
 
     coordinates(group.toString(), "imageselector", version.toString())
 
@@ -107,6 +91,8 @@ mavenPublishing {
     }
 }
 
-tasks.dokkaHtml {
-    outputDirectory.set(file("${rootDir}/docs"))
+dokka {
+    dokkaPublications.html {
+        outputDirectory.set(file("${rootDir}/docs"))
+    }
 }

@@ -1,24 +1,34 @@
 [versions]
-agp = "8.11.2"
-android-compileSdk = "36"
+agp = "9.3.1"
+android-compileSdk = "37"
 android-minSdk = "24"
 android-targetSdk = "36"
-androidx-activity = "1.11.0"
-composeMultiplatform = "1.9.1"
-kotlin = "2.2.20"
-kotlinx-coroutines = "1.10.2"
-skiko = "0.9.30"
+androidx-activity = "1.13.0"
+compose = "1.11.1"
+kotlin = "2.4.10"
+kotlinx-coroutines = "1.11.0"
+material3 = "1.9.0"
+skiko = "0.150.1"
+lifecycleRuntimeCompose = "2.11.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "compose" }
+compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "compose" }
+compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose" }
+compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
 skiko = { module = "org.jetbrains.skiko:skiko", version.ref = "skiko" }
+androidx-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeCompose" }
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
-composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
-composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-publishing = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
-dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
+kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+publishing = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
+dokka = { id = "org.jetbrains.dokka", version = "2.2.0" }
